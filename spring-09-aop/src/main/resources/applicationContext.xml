@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--注册bean-->
+    <bean id="userService" class="org.example.service.UserServiceImpl"/>
+    <bean id="beforeLog" class="org.example.log.BeforeLog"/>
+    <bean id="afterLog" class="org.example.log.AfterLog"/>
+
+    <!--配置AOP，需要导入XML约束-->
+
+    <!--使用原生的Spring API接口-->
+<!--    <aop:config>
+        &lt;!&ndash;切入点，AspectJ表达式 execution()&ndash;&gt;
+        <aop:pointcut id="pointCut" expression="execution(* org.example.service.UserServiceImpl.*(..))"/>
+        &lt;!&ndash;执行增强&ndash;&gt;
+        <aop:advisor advice-ref="beforeLog" pointcut-ref="pointCut"/>
+        <aop:advisor advice-ref="afterLog" pointcut-ref="pointCut"/>
+    </aop:config>-->
+
+    <!--方法二，自定义类-->
+    <bean id="diyPointCut" class="org.example.diy.DiyPointCut"/>
+<!--    <aop:config>
+        <aop:aspect ref="diyPointCut">
+            <aop:pointcut id="pointCut" expression="execution(* org.example.service.UserServiceImpl.*(..))"/>
+            <aop:before method="before" pointcut-ref="pointCut"/>
+            <aop:after method="after" pointcut-ref="pointCut"/>
+        </aop:aspect>
+    </aop:config>-->
+
+    <!--方式三-->
+    <bean id="annotationPointCut" class="org.example.diy.AnnotationPointCut"/>
+    <!--开启注解支持 默认JDK（proxy-target-class="false"）-->
+    <aop:aspectj-autoproxy/>
+</beans>
